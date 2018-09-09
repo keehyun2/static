@@ -3,108 +3,54 @@
 
 <head>
   <meta charset="utf-8">
-  <title>otp test</title>
+  <title>gpx test</title>
   <!-- <base href="/"> -->
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- <link rel="icon" type="image/x-icon" href="favicon.ico"> -->
-
   
   <script  src="https://code.jquery.com/jquery-1.6.4.min.js"  integrity="sha256-lR1rrjnrFy9XqIvWhvepIc8GD9IfWWSPDSC2qPmPxaU="  crossorigin="anonymous"></script>
-  <link rel="stylesheet" type="text/css" href="bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+  <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=aaLTGpJef0JH1DLHdvZC"></script>
+
 </head>
 
 <body>
+  <p>
+    DB는 PostgreSQL 을 사용하는 것을 제안드립니다. 라이센스 문제가 전혀없습니다.
+    MySQL은 오픈 소스 라이센스를 따르기는 하지만, 상업적으로 사용할 때는 상업용 라이센스를 구입해야만 합니다. 
 
-<div class="container-fluid">
-  <div>
-    <div class="row">
-      <div class="span8">
-        <p>
-          DB는 PostgreSQL 을 사용하는 것을 제안드립니다. 라이센스 문제가 전혀없습니다.
-          MySQL은 오픈 소스 라이센스를 따르기는 하지만, 상업적으로 사용할 때는 상업용 라이센스를 구입해야만 합니다. 
+    서버는 초기 비용이 저렴하고 사용량에 따라 추가 확장이 용이한 aws EC2 서비스를 사용하여 개발하는 것을 추천드립니다. 비용이 시간별로 사용량만큼 책정되고 사용하지 않을때는 비용이 부담되지 않습니다. 
 
-          서버는 초기 비용이 저렴하고 사용량에 따라 추가 확장이 용이한 aws EC2 서비스를 사용하여 개발하는 것을 추천드립니다. 비용이 시간별로 사용량만큼 책정되고 사용하지 않을때는 비용이 부담되지 않습니다. 
+    어플리케이션은 java springframework 을 사용하여 구현하겠습니다.
 
-          어플리케이션은 java springframework 을 사용하여 구현하겠습니다.
+    사용하여 개발된 내용을 사장님과 공유 하겠습니다. 
 
-          사용하여 개발된 내용을 사장님과 공유 하겠습니다. 
+    기획서 보니까 깔끔하게 잘되어있어서 제안드립니다. 
+  </p>
 
-          기획서 보니까 깔끔하게 잘되어있어서 제안드립니다. 
-        </p>
-      </div>
-    </div>
-    <div class="row">
-
-      <form>
-        <fieldset>
-            <div class="clearfix">
-                <label for="secret">사용자 id</label>
-                <div class="input">
-                  <input type="text" size="30" maxlength="20" name="userID" id="userID" class="xlarge" value="" />
-                </div>
-              </div>
-          <div class="clearfix">
-            <label for="secret">Secret (base32) - 비밀키</label>
-            <div class="input">
-              <!-- <input type="text" size="30" name="secret" id="secret" class="xlarge" value="JBSWY3DPEHPK3PXP" /> -->
-              <input type="text" size="30" name="secret" id="secret" class="xlarge" value="" />
-            </div>
-          </div>
-          <!-- /clearfix -->
-          <!-- <div class="clearfix">
-            <label>Secret (hex)</label>
-            <div class="input">
-              <span class="label label-default" id="secretHex"></span>
-              <span id='secretHexLength'></span>
-            </div>
-          </div> -->
-          <!-- /clearfix -->
-          <div class="clearfix">
-            <label>QR Code</label>
-            <div class="input">
-              <img id="qrImg" src="" />
-            </div>
-          </div>
-          <!-- /clearfix -->
-          <!-- <div class="clearfix">
-            <label>Unix epoch div 30 (padded hex)</label>
-            <div class="input">
-              <span class="label label-default" id='epoch'></span>
-            </div>
-          </div> -->
-          <!-- /clearfix -->
-          <!-- <div class="clearfix">
-            <label>HMAC(secret, time)</label>
-            <div class="input" id='hmac'></div>
-          </div> -->
-          <!-- /clearfix -->
-          <div class="clearfix">
-            <label>One-time Password - 인증번호</label>
-            <div class="input">
-              <span class="label label-primary" id='otp'></span>
-            </div>
-          </div>
-          <!-- /clearfix -->
-          <div class="clearfix">
-            <label>Updating in - 30초마다 인증번호 변경됨.</label>
-            <div class="input">
-              <span id='updatingIn'></span>
-            </div>
-          </div>
-          <!-- /clearfix -->
-
-
-        </fieldset>
-      </form>
-    </div>
-  </div>
-</div>
+<div id="map" style="height: 500px;"></div>
 
 </body>
 
 </html>
-<script>
-  
+  <script>
+    var map = new naver.maps.Map(document.getElementById('map'), {
+      zoom: 7,
+      mapTypeId: 'normal',
+      center: new naver.maps.LatLng(38.1361378, 128.4021238)
+  });
+
+  var HOME_PATH = window.HOME_PATH || '.';
+
+  $.ajax({
+      url: 'https://navermaps.github.io/maps.js/docs/data/seorak.gpx',
+      dataType: 'xml',
+      success: startDataLayer
+  });
+
+  function startDataLayer(xmlDoc) {
+      map.data.addGpx(xmlDoc);
+  }
   
 </script>
