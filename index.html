@@ -1,40 +1,115 @@
 <!doctype html>
-<html class="no-js" lang="">
+<html lang="en">
 
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <title></title>
-  <meta name="description" content="">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>otp test</title>
+  <!-- <base href="/"> -->
 
-  <link rel="manifest" href="site.webmanifest">
-  <link rel="apple-touch-icon" href="icon.png">
-  <!-- Place favicon.ico in the root directory -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- <link rel="icon" type="image/x-icon" href="favicon.ico"> -->
 
-  <link rel="stylesheet" href="css/normalize.css">
-  <link rel="stylesheet" href="css/main.css">
+  
+  <script  src="https://code.jquery.com/jquery-1.6.4.min.js"  integrity="sha256-lR1rrjnrFy9XqIvWhvepIc8GD9IfWWSPDSC2qPmPxaU="  crossorigin="anonymous"></script>
+  <link rel="stylesheet" type="text/css" href="bootstrap.min.css">
 </head>
 
 <body>
-  <!--[if lte IE 9]>
-    <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
-  <![endif]-->
 
-  <!-- Add your site or application content here -->
-  <p>Hello world! This is HTML5 Boilerplate.</p>
-  <script src="js/vendor/modernizr-3.6.0.min.js"></script>
-  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-  <script>window.jQuery || document.write('<script src="js/vendor/jquery-3.3.1.min.js"><\/script>')</script>
-  <script src="js/plugins.js"></script>
-  <script src="js/main.js"></script>
+<div class="container-fluid">
+  <div>
+    <div class="row">
+      <div class="span8">
+        <h1>시간 기반 일회용 비밀번호 알고리즘(OTP)</h1>
+        <p>사용자별로 base32 비밀키를 db에 가지고 있고 이를 이용해서 qr 코드 및 인증 코드를 생성합니다.</p>
+        <p>비밀키는 길이의 제한이 없지만 보통 16자리를 사용하는것 같습니다. </p>
+        <p>사용자 별로 QR 코드 는 다르게 생성됩니다. </p>
+        <p>QR코드 이미지 생성시에만 google 과 네트워크 통신을 하고 인증코드등은 시간기반으로 변경됩니다.</p>
+        <p>개인별로 고유한 비밀키를 가져야하므로,고유한 아이디값등으로 생성하면 될 것 같습니다. </p>
+        <p>
+          디비는 mysql을 사용하는 것을 제안드립니다. 가장널리 사용되는 DB 이고, 무료입니다. 
 
-  <!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
-  <script>
-    window.ga = function () { ga.q.push(arguments) }; ga.q = []; ga.l = +new Date;
-    ga('create', 'UA-XXXXX-Y', 'auto'); ga('send', 'pageview')
-  </script>
-  <script src="https://www.google-analytics.com/analytics.js" async defer></script>
+          초기 비용이 저렴하고 사용량에 따라 추가 확장이 용이한 aws EC2 서비스를 사용하여 개발하겠습니다. 
+
+          어플리케이션은 java springframework 을 사용하여 구현하겠습니다.
+
+          사용하여 개발된 내용을 사장님과 공유 하겠습니다. 
+
+          기획서 보니까 깔끔하게 잘되어있어서 제안드립니다. 
+        </p>
+      </div>
+    </div>
+    <div class="row">
+
+      <form>
+        <fieldset>
+            <div class="clearfix">
+                <label for="secret">사용자 id</label>
+                <div class="input">
+                  <input type="text" size="30" maxlength="20" name="userID" id="userID" class="xlarge" value="" />
+                </div>
+              </div>
+          <div class="clearfix">
+            <label for="secret">Secret (base32) - 비밀키</label>
+            <div class="input">
+              <!-- <input type="text" size="30" name="secret" id="secret" class="xlarge" value="JBSWY3DPEHPK3PXP" /> -->
+              <input type="text" size="30" name="secret" id="secret" class="xlarge" value="" />
+            </div>
+          </div>
+          <!-- /clearfix -->
+          <!-- <div class="clearfix">
+            <label>Secret (hex)</label>
+            <div class="input">
+              <span class="label label-default" id="secretHex"></span>
+              <span id='secretHexLength'></span>
+            </div>
+          </div> -->
+          <!-- /clearfix -->
+          <div class="clearfix">
+            <label>QR Code</label>
+            <div class="input">
+              <img id="qrImg" src="" />
+            </div>
+          </div>
+          <!-- /clearfix -->
+          <!-- <div class="clearfix">
+            <label>Unix epoch div 30 (padded hex)</label>
+            <div class="input">
+              <span class="label label-default" id='epoch'></span>
+            </div>
+          </div> -->
+          <!-- /clearfix -->
+          <!-- <div class="clearfix">
+            <label>HMAC(secret, time)</label>
+            <div class="input" id='hmac'></div>
+          </div> -->
+          <!-- /clearfix -->
+          <div class="clearfix">
+            <label>One-time Password - 인증번호</label>
+            <div class="input">
+              <span class="label label-primary" id='otp'></span>
+            </div>
+          </div>
+          <!-- /clearfix -->
+          <div class="clearfix">
+            <label>Updating in - 30초마다 인증번호 변경됨.</label>
+            <div class="input">
+              <span id='updatingIn'></span>
+            </div>
+          </div>
+          <!-- /clearfix -->
+
+
+        </fieldset>
+      </form>
+    </div>
+  </div>
+</div>
+
 </body>
 
 </html>
+<script>
+  
+  
+</script>
