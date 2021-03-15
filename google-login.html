@@ -76,13 +76,15 @@ firebase.auth().onAuthStateChanged(function(user) {
 			console.log("	Name: " + profile.displayName);
 			console.log("	Email: " + profile.email);
 			console.log("	Photo URL: " + profile.photoURL);
-			$('#userInfo').val(JSON.stringify(user.providerData, null,'\t'));
+			
 		});
+    $('#userInfo').val(JSON.stringify(user.providerData, null,'\t'));
 		$('#logoutBtn').show();
 	} else {
 	//The start method will wait until the DOM is loaded.
 		ui.start('#firebaseui-auth-container', uiConfig);
-	$('#logoutBtn').hide();
+    $('#userInfo').val('');
+	  $('#logoutBtn').hide();
 	}
 });
 
