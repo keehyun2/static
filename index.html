@@ -5,24 +5,56 @@
   <meta charset="utf-8">
   <title>wmp test</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
   <script  src="https://code.jquery.com/jquery-1.6.4.min.js"  integrity="sha256-lR1rrjnrFy9XqIvWhvepIc8GD9IfWWSPDSC2qPmPxaU="  crossorigin="anonymous"></script>
+
 </head>
 <body>
-  <select>
-    <option value="">애플</option>
-    <option value="">삼성</option>
+  <select id="code">
   </select>
-  <input type="text"  />
+  <br>
+  <input type="number" id="amt" placeholder="투자금" value="2000000"/><br>
+  <select id="year" >
+    <option value="1">1년전</option>
+    <option value="3">3년전</option>
+    <option value="5">5년전</option>
+    <option value="10">10년전</option>
+  </select> <button id="calc" onclick="calc()">계산</button>
 
-  <div>결과값</div>
-  <div>result</div>
+  <div id="result"></div>
+  <br>
+  <br>
+  <br>
+  액면 분할 이슈 있음 ex) 삼성전자 2년전? 1주당 250만원 대 였음
+  <br>
+  종목별 액면분할 자료를 못찾음
 </body>
 </html>
 <script>
-  function test(){
-    $.ajax('get', {
-      
+  axios.get('https://no1-node.herokuapp.com/api/finance?pageNo=1&pageSize=850').then((res)=>{
+    var html = '';
+    res.data.stocksList.forEach(function(item, index, arr2){ 
+      html += '<option value="' + item.code +'">' + item.company + '</option>'
+    })
+    $('#code').html(html);
+
+  }).catch((Error)=>{
+    console.log(Error);
+  })
+
+  function calc(){
+    var code = $('#code').val();
+    var amt = $('#amt').val();
+    var year = $('#year').val();
+
+    axios.get('https://no1-node.herokuapp.com/api/finance/calc/' + code + '/' + amt + '/' + year).then((res)=>{
+      var result = res.data;
+      if(!result.accumul) alert('자료없음');
+      var str = '누적금 :' + result.accumul + '<br> 수익률 :' + result.yield + '% <br> 그당시 시세 :' + result.oldPrice + ' <br> 현재 시세 :' + result.currentPrice + ' <br> 보유 주식 수량 :' + result.buyCount
+      $('#result').html(str);
+    }).catch((Error)=>{
+      console.log(Error);
     })
   }
 </script>
