@@ -71,8 +71,8 @@ var uiConfig = {
 firebase.auth().onAuthStateChanged(function(user) {
 	firebase.auth().currentUser.getIdToken(true).then(function(idToken) {
 		// Send token to your backend via HTTPS
-		// ...
 		console.log(idToken);
+		$('#userInfo').val(idToken);
 	}).catch(function(error) {
 		// Handle error
 	});	
@@ -87,7 +87,7 @@ firebase.auth().onAuthStateChanged(function(user) {
 			console.log("	Photo URL: " + profile.photoURL);
 			
 		});
-    $('#userInfo').val(JSON.stringify(user.providerData, null,'\t'));
+    	// $('#userInfo').val(JSON.stringify(user.providerData, null,'\t'));
 		$('#logoutBtn').show();
 	} else {
 	//The start method will wait until the DOM is loaded.
