@@ -49,8 +49,6 @@
 //Initialize the FirebaseUI Widget using Firebase.
 var ui = new firebaseui.auth.AuthUI(firebase.auth());
 
-ui.start('#firebaseui-auth-container', uiConfig);
-
 var uiConfig = {
 	callbacks: {
 		signInSuccessWithAuthResult: function(authResult, redirectUrl) {
@@ -70,13 +68,17 @@ var uiConfig = {
 };
 
 firebase.auth().onAuthStateChanged(function(user) {
-	firebase.auth().currentUser.getIdToken(true).then(function(idToken) {
-		// Send token to your backend via HTTPS
-		console.log(idToken);
-		$('#userInfo').val(idToken);
-	}).catch(function(error) {
-		// Handle error
-	});	
+	try {
+		firebase.auth().currentUser.getIdToken(true).then(function(idToken) {
+			// Send token to your backend via HTTPS
+			console.log(idToken);
+			$('#userInfo').val(idToken);
+		}).catch(function(error) {
+			// Handle error
+		});	
+	} catch (error) {
+		ui.start('#firebaseui-auth-container', uiConfig);
+	}
 
 	if (user) {
 		console.log(user)
