@@ -38,10 +38,11 @@
 			 Your app may use that space for branding, controls and other customizations.-->
 	<a href="javascript:logout()" id="logoutBtn" >logout</a>
 	<h1>Welcome to My Awesome App</h1>
-	<div id="firebaseui-auth-container"></div>
-	<div id="loader">Loading...</div>
-	<textarea id="userInfo" style="width:800px; height: 200px;"></textarea>
 	<div id="recaptcha-container"></div>
+	mobile-no: <input type="text" id="mobile-no" value="+821041378670"/> <button onclick="sendSms()">sendSms</button> <br>
+	code: <input type="text" id="code" /> <button onclick="login()">login</button><br>
+	<textarea id="userInfo" style="width:800px; height: 200px;"></textarea>
+	
 </body>
 </html>
 
@@ -59,16 +60,12 @@ window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-contai
   'expired-callback': () => {
     // Response expired. Ask user to solve reCAPTCHA again.
     // ...
-	console.log('expired');
+	alert('expired');
   }
 });
 
-function getPhoneNumberFromUserInput() {
-	return "+821041378670";
-}
-
-function login(){
-	phoneNumber = getPhoneNumberFromUserInput();
+function sendSms(){
+	var phoneNumber = $('mobile-no').val();
 	var appVerifier = window.recaptchaVerifier;
 	firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
 		.then((confirmationResult) => {
@@ -82,6 +79,12 @@ function login(){
 		// ...
 		console.log(error);
 		});
+}
+
+function login(){
+	var code = $('code').val();
+	var credential = firebase.auth.PhoneAuthProvider.credential(confirmationResult.verificationId, code);
+	console.log(credential);
 }
 
 function logout(){
