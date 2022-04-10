@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>Road API</title>
+	<title>firebase mobile login</title>
 	
 	<script src="https://code.jquery.com/jquery-3.5.1.js"
 		integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
@@ -46,59 +46,42 @@
 
 <script>
 
-//Initialize the FirebaseUI Widget using Firebase.
-var ui = new firebaseui.auth.AuthUI(firebase.auth());
+firebase.auth().languageCode = 'kr';
 
-var uiConfig = {
-	callbacks: {
-		signInSuccessWithAuthResult: function(authResult, redirectUrl) {
-			return false;
-		},
-		signInSuccessUrl: '/',
-		uiShown: function() {
-			// The widget is rendered.
-			// Hide the loader.
-			document.getElementById('loader').style.display = 'none';
-		}
-	},
-	signInFlow: 'popup',
-	signInOptions: [
-		firebase.auth.GoogleAuthProvider.PROVIDER_ID
-	],
-};
-
-firebase.auth().onAuthStateChanged(function(user) {
-	try {
-		firebase.auth().currentUser.getIdToken(true).then(function(idToken) {
-			// Send token to your backend via HTTPS
-			console.log(idToken);
-			$('#userInfo').val(idToken);
-		}).catch(function(error) {
-			// Handle error
-		});	
-	} catch (error) {
-		ui.start('#firebaseui-auth-container', uiConfig);
-	}
-
-	if (user) {
-		console.log(user)
-		user.providerData.forEach(function (profile) {
-			console.log("Sign-in provider: " + profile.providerId);
-			console.log("	Provider-specific UID: " + profile.uid);
-			console.log("	Name: " + profile.displayName);
-			console.log("	Email: " + profile.email);
-			console.log("	Photo URL: " + profile.photoURL);
-			
-		});
-    	// $('#userInfo').val(JSON.stringify(user.providerData, null,'\t'));
-		$('#logoutBtn').show();
-	} else {
-	//The start method will wait until the DOM is loaded.
-		ui.start('#firebaseui-auth-container', uiConfig);
-    $('#userInfo').val('');
-	  $('#logoutBtn').hide();
-	}
+window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+  'size': 'normal',
+  'callback': (response) => {
+    // reCAPTCHA solved, allow signInWithPhoneNumber.
+    // ...
+	console.log(response);
+  },
+  'expired-callback': () => {
+    // Response expired. Ask user to solve reCAPTCHA again.
+    // ...
+	console.log('expired');
+  }
 });
+
+function getPhoneNumberFromUserInput() {
+	return "+821041378670";
+}
+
+function login(){
+	phoneNumber = getPhoneNumberFromUserInput();
+	var appVerifier = window.recaptchaVerifier;
+	firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
+		.then((confirmationResult) => {
+		// SMS sent. Prompt user to type the code from the message, then sign the
+		// user in with confirmationResult.confirm(code).
+		window.confirmationResult = confirmationResult;
+		console.log(confirmationResult);
+		// ...
+		}).catch((error) => {
+		// Error; SMS not sent
+		// ...
+		console.log(error);
+		});
+}
 
 function logout(){
 	firebase.auth().signOut().then(() => {
