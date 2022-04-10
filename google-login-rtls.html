@@ -65,7 +65,7 @@ window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-contai
 });
 
 function sendSms(){
-	var phoneNumber = $('mobile-no').val();
+	var phoneNumber = $('#mobile-no').val();
 	var appVerifier = window.recaptchaVerifier;
 	firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
 		.then((confirmationResult) => {
@@ -82,7 +82,7 @@ function sendSms(){
 }
 
 function login(){
-	var code = $('code').val();
+	var code = $('#code').val();
 	var credential = firebase.auth.PhoneAuthProvider.credential(confirmationResult.verificationId, code);
 	console.log(credential);
 }
