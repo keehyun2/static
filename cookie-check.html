@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>cookie check</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+</head>
+
+<body>
+  <script>
+    function listCookies() {
+        var theCookies = document.cookie.split(';');
+        var arr = [];
+        for (var i = 1 ; i <= theCookies.length; i++) {
+          arr.push( i + ' ' + theCookies[i-1] );
+        }
+        return arr;
+    }
+
+    document.writeln(window.location.href);
+
+    // document.writeln(listCookies());
+    listCookies().forEach(element => document.writeln(element));
+  </script>
+</body>
