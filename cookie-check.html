@@ -27,14 +27,13 @@
         var theCookies = document.cookie.split(';');
         var arr = [];
         for (var i = 1 ; i <= theCookies.length; i++) {
-          arr.push( i + ' ' + theCookies[i-1] );
+          arr.push(theCookies[i-1] );
         }
         return arr;
     }
 
     document.writeln(window.location.href + '<br>');
 
-    // document.writeln('cookie - ' + document.cookie);
-    listCookies().forEach(element => document.writeln(element) + '<br>');
+    listCookies().forEach(element => document.writeln(element + '<br>') );
   </script>
 </body>
