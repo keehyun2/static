@@ -32,8 +32,11 @@
         return arr;
     }
 
+    document.writeln('현재 URL');
     document.writeln(window.location.href + '<br>');
 
+    document.writeln('');
+    document.writeln('쿠키 목록');
     listCookies().forEach(element => document.writeln(element + '<br>') );
   </script>
 </body>
