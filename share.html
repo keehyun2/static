@@ -1,86 +1,114 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>공유하기 테스트</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<head>
-  <meta charset="utf-8">
-  <title>공유하기 테스트</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.1.0/kakao.min.js" integrity="sha384-dpu02ieKC6NUeKFoGMOKz6102CLEWi9+5RQjWSV0ikYSFFd8M3Wp2reIcquJOemx" crossorigin="anonymous"></script>
+    <script>
+      Kakao.init("85a0a4282e59b38d112f861ad58d388c"); // 개인키
+      // Kakao.init("92305aa6f7fdaeda0c87a955ac2c2994"); // 개발키?
+      // Kakao.init("8585731d90a80e307139fb2a49c6b548"); // 마켓 운영에 사용중인 키
+    </script>
 
-  <script>
-    function shareFacebook(){
-      var url = encodeURIComponent(location.href);
-      window.open('https://www.facebook.com/sharer/sharer.php?u=' + url);
-    }
+    <script>
+      function shareMessage() {
+        Kakao.Share.sendScrap({
+          requestUrl: location.href,
+        });
+      }
+      function share2(){
+        Kakao.Story.share({
+          url: 'https://naver.com',
+          text: '카카오 개발자 사이트로 놀러오세요! #개발자 #카카오 :)',
+        });
+      }
+      function shareFacebook() {
+        var url = "http://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent('https://naver.com');
 
-    function copyToClipBoard(){
-      navigator.clipboard.writeText(location.href)
+        if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.gfz) {
+          // Call iOS interface
+          appPageBlank(url);
+        } else {
+          window.open(url, "facebook", "width=800, height=700, toolbar=no, menubar=no, scrollbars=no, resizable=yes");
+        }
+
+        // if ($("body").data("view") == "mbl") {
+        //   $("#lyPopSns .btn-close").trigger("click");
+        // }
+      }
+
+      function copyToClipBoard() {
+        navigator.clipboard
+          .writeText(location.href)
           .then(() => {
-          alert("url 을 복사하였습니다.");
-      })
-          .catch(err => {
-            alert('Something went wrong', err);
-      })
-    }
+            alert("url 을 복사하였습니다.");
+          })
+          .catch((err) => {
+            alert("Something went wrong", err);
+          });
+      }
+
+      /**
+       * APP URL BLANK 처리
+       **/
+      var appPageBlank = function (trgUrl) {
+        var trgtUrl = trgUrl;
+
+        //골프존통합플랫폼 - 팝업
+        ultronApp = /com.golfzon/.test(window.navigator.userAgent) ? true : false;
+
+        if (ultronApp) {
+          window.ultron = new window.UltronBase();
+          window.ultron.forApp = true;
+          let settings = {
+            url: `${trgUrl}`,
+            type: 0,
+            navi: 1,
+            openType: 0,
+          };
+          window.ultron.viewOpen(settings);
+          window.ultron.flush();
+        } else {
+          if (window.gfz) {
+            window.gfz.openPopup(trgtUrl);
+          } else if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.gfz) {
+            // Call iOS interface
+            var params = {
+              URL: trgtUrl,
+            };
+
+            var message = {
+              command: "openPopup",
+              parameters: params,
+              callback: "N/A",
+            };
+
+            window.webkit.messageHandlers.gfz.postMessage(message);
+          } else {
+            window.open(trgtUrl);
+          }
+        }
+      };
+    </script>
+  </head>
+  <body>
+    <div className="Facebook">
+      <button onclick="shareFacebook()">페이스북 공유</button>
+    </div>
+
+    <br /><br />
+
+    <button onclick="copyToClipBoard()">공유하기(현재 페이지 url 복사)</button>
+
+    <br /><br />
     
-  </script>
-</head>
-<body>
-  <div className="Facebook">
-    <button onclick="shareFacebook()">페이스북 공유</button>
-  </div>
-  <br><br>
-  <button onclick="copyToClipBoard()">공유하기(현재 페이지 url 복사)</button>
-  <br><br>
-
-<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.1.0/kakao.min.js"
-integrity="sha384-dpu02ieKC6NUeKFoGMOKz6102CLEWi9+5RQjWSV0ikYSFFd8M3Wp2reIcquJOemx" crossorigin="anonymous"></script>
-<script>
-  Kakao.init('85a0a4282e59b38d112f861ad58d388c'); // 사용하려는 앱의 JavaScript 키 입력
-</script>
-
-<a id="kakaotalk-sharing-btn" href="javascript:;">
-  <img src="https://developers.kakao.com/assets/img/about/logos/kakaotalksharing/kakaotalk_sharing_btn_medium.png"
-    alt="카카오톡 공유 보내기 버튼" />
-</a>
-
-<script>
-  Kakao.Share.createDefaultButton({
-    container: '#kakaotalk-sharing-btn',
-    objectType: 'feed',
-    content: {
-      title: '딸기 치즈 케익',
-      description: '#케익 #딸기 #삼평동 #카페 #분위기 #소개팅',
-      imageUrl:
-        'http://k.kakaocdn.net/dn/Q2iNx/btqgeRgV54P/VLdBs9cvyn8BJXB3o7N8UK/kakaolink40_original.png',
-      link: {
-        // [내 애플리케이션] > [플랫폼] 에서 등록한 사이트 도메인과 일치해야 함
-        mobileWebUrl: 'https://developers.kakao.com',
-        webUrl: 'https://developers.kakao.com',
-      },
-    },
-    social: {
-      likeCount: 286,
-      commentCount: 45,
-      sharedCount: 845,
-    },
-    buttons: [
-      {
-        title: '웹으로 보기',
-        link: {
-          mobileWebUrl: 'https://developers.kakao.com',
-          webUrl: 'https://developers.kakao.com',
-        },
-      },
-      {
-        title: '앱으로 보기',
-        link: {
-          mobileWebUrl: 'https://developers.kakao.com',
-          webUrl: 'https://developers.kakao.com',
-        },
-      },
-    ],
-  });
-</script>
-
-
-</body>
+    <button onclick="shareMessage()">카카오톡 공유</button>
+    
+    <br /><br />
+    <button onclick="share2()">카카오 스토리 공유</button>
+    
+    
+  </body>
+</html>
