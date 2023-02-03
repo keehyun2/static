@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>공유하기 테스트</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <script>
+      function test() {
+        window.open("https://www.facebook.com/sharer/sharer.php?u=https://naver.com/");
+      }
+    </script>
+  </head>
+  <body>
+    <div id="fb-root"></div>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/ko_KR/sdk.js#xfbml=1&version=v15.0" nonce="INZ7SY8U"></script>
+
+    <div class="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/" data-layout="button_count" data-size="small">
+      <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">공유</a>
+    </div>
+
+    <br /><br /><br />
+
+    <div className="Facebook">
+      <button onclick="test()">페이스북 공유</button>
+    </div>
+  </body>
+</html>
