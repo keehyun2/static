@@ -6,26 +6,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.1.0/kakao.min.js" integrity="sha384-dpu02ieKC6NUeKFoGMOKz6102CLEWi9+5RQjWSV0ikYSFFd8M3Wp2reIcquJOemx" crossorigin="anonymous"></script>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/ko_KR/sdk.js#xfbml=1&version=v15.0" nonce="INZ7SY8U"></script>
     <script>
-      Kakao.init("85a0a4282e59b38d112f861ad58d388c"); // 개인키
+      // Kakao.init("85a0a4282e59b38d112f861ad58d388c"); // 개인키
       // Kakao.init("92305aa6f7fdaeda0c87a955ac2c2994"); // 개발키?
       // Kakao.init("8585731d90a80e307139fb2a49c6b548"); // 마켓 운영에 사용중인 키
+      Kakao.init("13c2bb25b24cf9430e9fd9484ae4afd3"); // 골핑키
     </script>
 
     <script>
+      var url1 = "https://golping.golfzon.com";
+
       function shareMessage() {
         Kakao.Share.sendScrap({
-          requestUrl: location.href,
+          requestUrl: url1,
         });
       }
-      function share2(){
+      function share2() {
         Kakao.Story.share({
-          url: 'https://naver.com',
-          text: '카카오 개발자 사이트로 놀러오세요! #개발자 #카카오 :)',
+          url: url1,
+          text: "카카오 개발자 사이트로 놀러오세요! #개발자 #카카오 :)",
         });
       }
       function shareFacebook() {
-        var url = "http://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent('https://naver.com');
+        var url = "http://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(url1);
 
         if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.gfz) {
           // Call iOS interface
@@ -33,15 +37,11 @@
         } else {
           window.open(url, "facebook", "width=800, height=700, toolbar=no, menubar=no, scrollbars=no, resizable=yes");
         }
-
-        // if ($("body").data("view") == "mbl") {
-        //   $("#lyPopSns .btn-close").trigger("click");
-        // }
       }
 
       function copyToClipBoard() {
         navigator.clipboard
-          .writeText(location.href)
+          .writeText(url1)
           .then(() => {
             alert("url 을 복사하였습니다.");
           })
@@ -103,12 +103,10 @@
     <button onclick="copyToClipBoard()">공유하기(현재 페이지 url 복사)</button>
 
     <br /><br />
-    
+
     <button onclick="shareMessage()">카카오톡 공유</button>
-    
+
     <br /><br />
     <button onclick="share2()">카카오 스토리 공유</button>
-    
-    
   </body>
 </html>
