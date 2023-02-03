@@ -8,10 +8,7 @@
     <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.1.0/kakao.min.js" integrity="sha384-dpu02ieKC6NUeKFoGMOKz6102CLEWi9+5RQjWSV0ikYSFFd8M3Wp2reIcquJOemx" crossorigin="anonymous"></script>
     <script async defer crossorigin="anonymous" src="https://connect.facebook.net/ko_KR/sdk.js#xfbml=1&version=v15.0" nonce="INZ7SY8U"></script>
     <script>
-      // Kakao.init("85a0a4282e59b38d112f861ad58d388c"); // 개인키
-      // Kakao.init("92305aa6f7fdaeda0c87a955ac2c2994"); // 개발키?
-      // Kakao.init("8585731d90a80e307139fb2a49c6b548"); // 마켓 운영에 사용중인 키
-      Kakao.init("13c2bb25b24cf9430e9fd9484ae4afd3"); // 골핑키
+      Kakao.init("85a0a4282e59b38d112f861ad58d388c"); // 개인키
     </script>
 
     <script>
@@ -96,6 +93,11 @@
   <body>
     <div className="Facebook">
       <button onclick="shareFacebook()">페이스북 공유</button>
+    </div>
+    <div id="fb-root"></div>
+
+    <div class="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/" data-layout="button_count" data-size="small">
+      <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">공유</a>
     </div>
 
     <br /><br />
