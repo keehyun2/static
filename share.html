@@ -10,7 +10,252 @@
     <script>
       Kakao.init("85a0a4282e59b38d112f861ad58d388c"); // 개인키
     </script>
+    <!-- <script type="text/javascript" src="//o.gzcdn.net/mui/js/UltronBase_v.0.9.7.min.js"></script> -->
+    <script>
+      "use strict";
+var UltronBase = function(n) {
+    var o = []
+      , e = null
+      , t = n || 200
+      , r = function() {
+        o.length && (window.location.href = "hybridfunction://flush")
+    };
+    e = window.setInterval(r, t),
+    window.getUltronQueue = function() {
+        if (o.length) {
+            var n = encodeURIComponent(JSON.stringify(o));
+            return o = [],
+            n
+        }
+    }
+    ,
+    window._ultronFunctionStorage = {},
+    window._ultronErrorFunctionStorage = {};
+    var i = function(n) {
+        return n.replace(/\//g, "_") + (new Date).getTime()
+    }
+      , c = function(n, e) {
+        if (n) {
+            var t = i(n)
+              , r = "";
+            if (e) {
+                if (e.callback && "function" == typeof e.callback) {
+                    for (var c = t; window._ultronFunctionStorage[c]; )
+                        c += "_";
+                    r += (r ? "&" : "?") + "callback=_ultronFunctionStorage." + c,
+                    window._ultronFunctionStorage[c] = function(n) {
+                        e.callback(n),
+                        window.setTimeout(function() {
+                            delete window._ultronFunctionStorage[c],
+                            delete window._ultronErrorFunctionStorage[c]
+                        }, 1e3)
+                    }
+                }
+                if (e.errorCallback && "function" == typeof e.errorCallback || e.error && "function" == typeof e.error) {
+                    for (var u = t; window._ultronErrorFunctionStorage[u]; )
+                        u += "_";
+                    r += (r ? "&" : "?") + (e.errorCallback ? "errorCallback" : "error") + "=_ultronErrorFunctionStorage." + u,
+                    window._ultronErrorFunctionStorage[u] = function(n) {
+                        e.errorCallback ? e.errorCallback(n) : e.error(n),
+                        window.setTimeout(function() {
+                            delete window._ultronFunctionStorage[u],
+                            delete window._ultronErrorFunctionStorage[u]
+                        }, 1e3)
+                    }
+                }
+                for (var a in e)
+                    "callback" !== a && "errorCallback" !== a && "error" !== a && (r += (r ? "&" : "?") + a + "=" + e[a])
+            }
+            var l = "hybridfunction://" + n;
+            o.push(r ? l + r : l)
+        }
+    }
+      , u = function(n) {
+        o.push(n)
+    }
+      , a = function(n) {
+        c("auth", n)
+    }
+      , l = function(n) {
+        c("authSimple", n)
+    }
+      , f = function(n) {
+        var o = {
+            callback: n
+        };
+        c("authInfo", o)
+    }
+      , s = function(n) {
+        c("authLogout", n)
+    }
+      , d = function(n) {
+        var o = {
+            callback: n
+        };
+        c("appInfo", o)
+    }
+      , w = function(n) {
+        var o, e = (encodeURIComponent(n.url) || "",
+        ""), t = "";
+        if (n.param) {
+            for (o in n.param)
+                e += o + "=" + n.param[o] + "&";
+            e = encodeURIComponent(e.substring(0, e.length - 1)),
+            n.param = e
+        }
+        if (n.headers) {
+            for (o in n.headers)
+                t += o + "=" + n.headers[o] + "&";
+            t = encodeURIComponent(t.substring(0, t.length - 1)),
+            n.headers = t
+        }
+        c("request", n)
+    }
+      , g = function(n) {
+        if (n) {
+            var o = {
+                url: n
+            };
+            c("nasmo", o)
+        }
+    }
+      , p = function(n) {
+        n.url && (n.url = encodeURIComponent(n.url)),
+        c("viewOpen", n)
+    }
+      , h = function(n) {
+        n || (n = {}),
+        n.enabled = 1,
+        c("pullToRefresh", n)
+    }
+      , k = function(n) {
+        n || (n = {}),
+        n.enabled = 0,
+        c("pullToRefresh", n)
+    }
+      , b = function(n) {
+        c("canOpenUrl", n)
+    }
+      , v = function() {
+        c("closeWindow", {})
+    }
+      , S = function() {
+        c("closeWindow", {
+            depth: "all"
+        })
+    }
+      , m = function() {
+        c("progressView", {
+            show: 1
+        })
+    }
+      , C = function() {
+        c("progressView", {
+            show: 0
+        })
+    }
+      , _ = function(n) {
+        var o = {
+            callback: n
+        };
+        c("networkStatus", o)
+    }
+      , F = function(n, o) {
+        if (n && o) {
+            var e = {
+                key: n,
+                value: encodeURIComponent(JSON.stringify(o))
+            };
+            e.action = "set",
+            c("storage", e)
+        }
+    }
+      , I = function(n, o) {
+        if (n) {
+            var e = {
+                key: n,
+                callback: o
+            };
+            e.action = "get",
+            c("storage", e)
+        }
+    }
+      , y = function(n) {
+        if (n) {
+            var o = {
+                key: n
+            };
+            o.action = "set",
+            c("storage", o)
+        }
+    }
+      , R = function(n) {
+        if (n) {
+            var o = {
+                script: encodeURIComponent(n)
+            };
+            c("opener", o)
+        }
+    }
+      , U = function(n, o) {
+        c(n, o)
+    }
+      , T = {
+        connect: function(n) {
+            c("socket/connect", n)
+        },
+        disconnect: function(n) {
+            c("socket/disconnect", n)
+        },
+        isConnected: function(n) {
+            c("socket/isConnected", n)
+        },
+        register: function(n) {
+            c("socket/register", n)
+        },
+        unregister: function(n) {
+            c("socket/unregister", n)
+        },
+        write: function(n) {
+            c("socket/write", n)
+        }
+    };
+    return {
+        auth: a,
+        authSimple: l,
+        getAuthInfo: f,
+        authLogout: s,
+        getAppInfo: d,
+        request: w,
+        playNasmo: g,
+        viewOpen: p,
+        enablePullToRefresh: h,
+        disablePullToRefresh: k,
+        canOpenUrl: b,
+        closeWindow: v,
+        closeAllWindow: S,
+        showLoading: m,
+        hideLoading: C,
+        checkNetwork: _,
+        setStorage: F,
+        getStorage: I,
+        removeStorage: y,
+        opener: R,
+        socket: {
+            connect: T.connect,
+            disconnect: T.disconnect,
+            isConnected: T.isConnected,
+            register: T.register,
+            unregister: T.unregister,
+            write: T.write
+        },
+        pushQueue: u,
+        flush: r,
+        bind: U
+    }
+};
 
+    </script>
     <script>
       var url1 = "https://golping.golfzon.com";
 
@@ -94,8 +339,10 @@
     <div className="Facebook">
       <button onclick="shareFacebook()">페이스북 공유</button>
     </div>
-    <div id="fb-root"></div>
 
+    <br /><br />
+
+    <div id="fb-root"></div>
     <div class="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/" data-layout="button_count" data-size="small">
       <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">공유</a>
     </div>
@@ -109,6 +356,7 @@
     <button onclick="shareMessage()">카카오톡 공유</button>
 
     <br /><br />
+
     <button onclick="share2()">카카오 스토리 공유</button>
   </body>
 </html>
